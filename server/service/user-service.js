@@ -20,6 +20,15 @@ class UserService {
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
         return {...tokens, user: userDto}
     }
+
+    async activate(activationLink){
+        const user = await UserModel.findOne({activationLink})
+        if(!user){
+            throw new Error('Incorrect link activation')
+        }
+        user.isActivated = true;
+        await user.save();
+    }
 }
 
 module.exports = new UserService();
